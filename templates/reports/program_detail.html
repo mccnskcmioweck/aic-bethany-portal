@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ record.get_program_type_display }} – {{ record.date }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'program_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Back</a>
+  <div class="card"><div class="card-body p-4">
+    <div class="text-center border-bottom pb-3 mb-4"><h3 style="color:var(--church-primary)">AFRICAN INLAND CHURCH – BETHANY</h3><h5>SPIRITUAL PROGRAM REPORT – {{ record.get_program_type_display|upper }}</h5><p class="mb-0 text-muted">{{ record.date|date:"l, d F Y" }}</p></div>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6"><strong>Program:</strong> {{ record.get_program_type_display }}</div>
+      <div class="col-md-6"><strong>Title:</strong> {{ record.title }}</div>
+      <div class="col-md-6"><strong>Leader:</strong> {{ record.leader.get_full_name|default:"—" }}</div>
+      <div class="col-md-3"><strong>Present:</strong> {{ record.members_present }}</div>
+      <div class="col-md-3"><strong>Total:</strong> {{ record.total_members }}</div>
+    </div>
+    <div class="text-center mb-4"><div class="d-inline-block px-5 py-3 border rounded"><div class="fs-1 fw-bold text-primary">{{ record.attendance_percentage }}%</div><div class="text-muted">Attendance Rate</div><div class="progress mt-2" style="height:12px;width:200px;"><div class="progress-bar {% if record.attendance_percentage >= 75 %}bg-success{% elif record.attendance_percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}" style="width:{{ record.attendance_percentage }}%"></div></div></div></div>
+    {% if record.activity_summary %}<div class="mb-3 p-3 bg-light rounded"><h6><i class="bi bi-journal-text"></i> Activity Summary</h6><p class="mb-0">{{ record.activity_summary }}</p></div>{% endif %}
+    {% if record.achievements %}<div class="mb-3 p-3 bg-light rounded"><h6><i class="bi bi-trophy"></i> Achievements</h6><p class="mb-0">{{ record.achievements }}</p></div>{% endif %}
+    {% if record.prayer_items %}<div class="mb-3 p-3 bg-light rounded"><h6><i class="bi bi-hand-index"></i> Prayer Items</h6><p class="mb-0">{{ record.prayer_items }}</p></div>{% endif %}
+    {% if record.upcoming_plans %}<div class="mb-3 p-3 bg-light rounded"><h6><i class="bi bi-calendar-check"></i> Upcoming Plans</h6><p class="mb-0">{{ record.upcoming_plans }}</p></div>{% endif %}
+    <div class="mt-4 border-top pt-3 text-muted small"><div class="row"><div class="col-md-6">Program Leader Signature: _____________________________</div><div class="col-md-6">Submitted to: _____________________________ Date: _______</div></div></div>
+  </div></div>
+  <button onclick="window.print()" class="btn btn-church mt-3"><i class="bi bi-printer"></i> Print</button>
+</div>{% endblock %}

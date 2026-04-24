@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ event.title }} – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'event_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Back to Events</a>
+  <div class="card"><div class="card-body p-4">
+    <span class="badge bg-secondary mb-2">{{ event.get_category_display }}</span>
+    <h2>{{ event.title }}</h2>
+    <div class="row g-3 mb-4">
+      <div class="col-sm-4"><i class="bi bi-calendar3 text-primary"></i> <strong>Date:</strong> {{ event.date|date:"l, d F Y" }}</div>
+      <div class="col-sm-4"><i class="bi bi-clock text-primary"></i> <strong>Time:</strong> {{ event.start_time }}{% if event.end_time %} – {{ event.end_time }}{% endif %}</div>
+      <div class="col-sm-4"><i class="bi bi-geo-alt text-primary"></i> <strong>Venue:</strong> {{ event.venue }}</div>
+    </div>
+    <p>{{ event.description }}</p>
+    {% if user.is_authenticated %}
+      {% if is_registered %}<div class="alert alert-success"><i class="bi bi-check-circle"></i> You are registered for this event! 🙏</div>
+      {% else %}<a href="{% url 'register_for_event' event.pk %}" class="btn btn-church"><i class="bi bi-calendar-check"></i> Register for This Event</a>{% endif %}
+    {% else %}<div class="alert alert-info"><a href="{% url 'login' %}">Login</a> to register for this event.</div>{% endif %}
+  </div></div>
+</div>
+{% endblock %}

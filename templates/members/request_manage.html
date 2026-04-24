@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Manage Request – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'request_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Back to Requests</a>
+  <div class="row g-4">
+    <div class="col-md-7"><div class="card"><div class="card-header"><i class="bi bi-gear"></i> Manage Request</div>
+      <div class="card-body p-4"><form method="post">{% csrf_token %}
+        <div class="mb-3"><label class="form-label fw-semibold">Status</label>
+          <select name="status" class="form-select">{% for val, label in form.fields.status.choices %}<option value="{{ val }}" {% if service_request.status == val %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+        </div>
+        <div class="mb-3"><label class="form-label fw-semibold">Assign To</label>
+          <select name="assigned_to" class="form-select"><option value="">— Unassigned —</option>{% for u in form.fields.assigned_to.queryset %}<option value="{{ u.pk }}" {% if service_request.assigned_to.pk == u.pk %}selected{% endif %}>{{ u.get_full_name|default:u.username }}</option>{% endfor %}</select>
+        </div>
+        <div class="mb-3"><label class="form-label fw-semibold">Admin Notes</label><textarea name="admin_notes" class="form-control" rows="4">{{ service_request.admin_notes }}</textarea></div>
+        <button type="submit" class="btn btn-church w-100"><i class="bi bi-save"></i> Save Changes</button>
+      </form></div>
+    </div></div>
+    <div class="col-md-5"><div class="card"><div class="card-header"><i class="bi bi-info-circle"></i> Request Details</div>
+      <div class="card-body">
+        <p><strong>From:</strong> {{ service_request.member.get_full_name }}</p>
+        <p><strong>Type:</strong> {{ service_request.get_request_type_display }}</p>
+        <p><strong>Subject:</strong> {{ service_request.subject }}</p>
+        <p><strong>Preferred Date:</strong> {{ service_request.preferred_date|default:"Not specified" }}</p>
+        <p><strong>Submitted:</strong> {{ service_request.created_at|date:"d M Y, H:i" }}</p>
+        <hr><p class="mb-0"><strong>Description:</strong><br>{{ service_request.description }}</p>
+      </div>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

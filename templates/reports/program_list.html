@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Program Reports{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4"><div><h2 class="mb-0"><i class="bi bi-music-note-beamed"></i> Spiritual Program Reports</h2><a href="{% url 'report_dashboard' %}" class="small text-muted">← Dashboard</a></div><a href="{% url 'program_create' %}" class="btn btn-church"><i class="bi bi-plus"></i> New Report</a></div>
+  <div class="card"><div class="table-responsive"><table class="table table-hover mb-0">
+    <thead class="table-dark"><tr><th>Date</th><th>Program</th><th>Title</th><th>Leader</th><th>Present</th><th>Total</th><th>Attendance %</th><th></th></tr></thead>
+    <tbody>{% for r in records %}<tr>
+      <td>{{ r.date|date:"d M Y" }}</td>
+      <td><span class="badge bg-primary">{{ r.get_program_type_display }}</span></td>
+      <td>{{ r.title }}</td><td>{{ r.leader.get_full_name|default:"—" }}</td>
+      <td>{{ r.members_present }}</td><td>{{ r.total_members }}</td>
+      <td><div class="progress" style="height:20px;min-width:60px;"><div class="progress-bar {% if r.attendance_percentage >= 75 %}bg-success{% elif r.attendance_percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}" style="width:{{ r.attendance_percentage }}%">{{ r.attendance_percentage }}%</div></div></td>
+      <td><a href="{% url 'program_detail' r.pk %}" class="btn btn-sm btn-outline-primary">View</a></td>
+    </tr>{% empty %}<tr><td colspan="8" class="text-center text-muted py-4">No records yet.</td></tr>{% endfor %}</tbody>
+  </table></div></div>
+</div>{% endblock %}

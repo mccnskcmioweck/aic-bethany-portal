@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}My Profile – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4"><h2 class="mb-4"><i class="bi bi-person-circle"></i> My Profile</h2>
+<div class="row g-4">
+  <div class="col-md-4"><div class="card text-center p-4">
+    {% if member_profile.photo %}<img src="{{ member_profile.photo.url }}" class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
+    {% else %}<div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width:120px;height:120px;"><i class="bi bi-person-fill text-white" style="font-size:3rem;"></i></div>{% endif %}
+    <h5>{{ user.get_full_name|default:user.username }}</h5>
+    <p class="text-muted mb-2">{{ user.email }}</p>
+    {% if member_profile.position %}<span class="badge mb-1" style="background:var(--church-primary)">{{ member_profile.position.name }}</span><br>{% endif %}
+    <span class="badge {% if member_profile.status == 'active' %}bg-success{% elif member_profile.status == 'pending' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ member_profile.get_status_display }}</span>
+  </div></div>
+  <div class="col-md-8"><div class="card">
+    <div class="card-header"><i class="bi bi-pencil"></i> Edit Profile</div>
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3"><label class="form-label fw-semibold">{{ field.label }}</label>{{ field }}
+          {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-church"><i class="bi bi-save"></i> Save Changes</button>
+      </form>
+    </div>
+  </div></div>
+</div></div>
+{% endblock %}

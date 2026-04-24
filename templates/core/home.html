@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Welcome – AIC Bethany{% endblock %}
+{% block content %}
+<div class="hero-section py-5">
+  <div class="container text-center py-4">
+    <h1 class="display-4 fw-bold mb-3">🙏 Welcome to AIC Bethany</h1>
+    <p class="lead mb-2">African Inland Church – Bethany</p>
+    <p class="mb-4">Kabarnet, Kasoiyo</p>
+    <p class="mb-4 fs-5 fst-italic">"For where two or three gather in my name, there am I with them." — Matthew 18:20</p>
+    <a href="{% url 'register' %}" class="btn btn-gold btn-lg me-3"><i class="bi bi-person-plus"></i> Join Our Church</a>
+    <a href="{% url 'event_list' %}" class="btn btn-outline-light btn-lg"><i class="bi bi-calendar3"></i> Upcoming Events</a>
+  </div>
+</div>
+<div class="container my-5">
+  {% if announcements %}
+  <div class="mb-5">
+    <h3 class="mb-3"><i class="bi bi-megaphone text-warning"></i> Announcements</h3>
+    {% for ann in announcements %}
+    <div class="card mb-2 announcement-{{ ann.priority }}">
+      <div class="card-body py-2">
+        <h6 class="mb-1">{{ ann.title }}
+          {% if ann.priority == 'urgent' %}<span class="badge bg-danger ms-2">URGENT</span>{% endif %}
+          {% if ann.priority == 'high' %}<span class="badge bg-warning text-dark ms-2">IMPORTANT</span>{% endif %}
+        </h6>
+        <p class="mb-0 text-muted small">{{ ann.content }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="row g-4">
+    <div class="col-md-6">
+      <h3 class="mb-3"><i class="bi bi-calendar-event text-primary"></i> Upcoming Events</h3>
+      {% for event in upcoming_events %}
+      <div class="card mb-3"><div class="card-body">
+        <h5>{{ event.title }}</h5>
+        <p class="text-muted mb-1"><i class="bi bi-calendar3"></i> {{ event.date }} at {{ event.start_time }}</p>
+        <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> {{ event.venue }}</p>
+        <a href="{% url 'event_detail' event.pk %}" class="btn btn-sm btn-church">View Details</a>
+      </div></div>
+      {% empty %}<div class="card"><div class="card-body text-muted">No upcoming events.</div></div>
+      {% endfor %}
+      <a href="{% url 'event_list' %}" class="btn btn-outline-primary btn-sm">All Events →</a>
+    </div>
+    <div class="col-md-6">
+      <h3 class="mb-3"><i class="bi bi-mic text-primary"></i> Recent Sermons</h3>
+      {% for sermon in recent_sermons %}
+      <div class="card mb-3"><div class="card-body">
+        <h5>{{ sermon.title }}</h5>
+        <p class="text-muted mb-1"><i class="bi bi-book"></i> {{ sermon.scripture_reference }}</p>
+        <p class="text-muted mb-2"><i class="bi bi-person"></i> {{ sermon.get_preacher_name }}</p>
+        <a href="{% url 'sermon_detail' sermon.pk %}" class="btn btn-sm btn-church">Listen / Read</a>
+      </div></div>
+      {% empty %}<div class="card"><div class="card-body text-muted">No sermons yet.</div></div>
+      {% endfor %}
+      <a href="{% url 'sermon_list' %}" class="btn btn-outline-primary btn-sm">All Sermons →</a>
+    </div>
+  </div>
+  <div class="row g-3 mt-4 text-center">
+    <div class="col-6 col-md-3"><div class="card p-3 h-100"><i class="bi bi-hand-index fs-1 text-primary mb-2"></i><h6>Request a Service</h6><a href="{% url 'service_request' %}" class="btn btn-sm btn-church mt-auto">Make Request</a></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3 h-100"><i class="bi bi-person-plus fs-1 text-primary mb-2"></i><h6>New Member?</h6><a href="{% url 'register' %}" class="btn btn-sm btn-gold mt-auto">Register Now</a></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3 h-100"><i class="bi bi-people-fill fs-1 text-primary mb-2"></i><h6>Church Groups</h6><a href="{% url 'group_list' %}" class="btn btn-sm btn-church mt-auto">View Groups</a></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3 h-100"><i class="bi bi-mic fs-1 text-primary mb-2"></i><h6>Sermons</h6><a href="{% url 'sermon_list' %}" class="btn btn-sm btn-church mt-auto">Listen</a></div></div>
+  </div>
+</div>
+{% endblock %}

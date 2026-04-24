@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}{{ sermon.title }} – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'sermon_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Back to Sermons</a>
+
+  <div class="card">
+    <div class="card-body p-4">
+
+      <!-- Header -->
+      {% if sermon.series %}
+      <span class="badge mb-2" style="background:var(--church-primary)">Series: {{ sermon.series }}</span>
+      {% endif %}
+      <h2 class="mb-1">{{ sermon.title }}</h2>
+      <div class="row g-3 mb-4 text-muted">
+        <div class="col-sm-4"><i class="bi bi-book text-primary"></i> <strong>Scripture:</strong> {{ sermon.scripture_reference }}</div>
+        <div class="col-sm-4"><i class="bi bi-person text-primary"></i> <strong>Preacher:</strong> {{ sermon.get_preacher_name }}</div>
+        <div class="col-sm-4"><i class="bi bi-calendar3 text-primary"></i> <strong>Date:</strong> {{ sermon.sermon_date|date:"d F Y" }}</div>
+      </div>
+
+      <!-- YouTube Embed -->
+      {% if sermon.get_youtube_embed %}
+      <div class="mb-4">
+        <h5><i class="bi bi-youtube text-danger"></i> Watch on YouTube</h5>
+        <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
+          <iframe src="{{ sermon.get_youtube_embed }}"
+                  title="{{ sermon.title }}"
+                  allowfullscreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+          </iframe>
+        </div>
+      </div>
+      {% elif sermon.youtube_url %}
+      <div class="mb-4">
+        <a href="{{ sermon.youtube_url }}" target="_blank" class="btn btn-danger btn-lg w-100 py-3">
+          <i class="bi bi-youtube fs-4"></i>&nbsp; Watch on YouTube
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Facebook Link -->
+      {% if sermon.facebook_url %}
+      <div class="mb-4">
+        <a href="{{ sermon.facebook_url }}" target="_blank"
+           class="btn btn-lg w-100 py-3 text-white"
+           style="background:#1877f2;">
+          <i class="bi bi-facebook fs-4"></i>&nbsp; Watch on Facebook
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Audio Player -->
+      {% if sermon.audio_file %}
+      <div class="mb-4">
+        <h5><i class="bi bi-headphones text-success"></i> Listen to Audio</h5>
+        <audio controls class="w-100">
+          <source src="{{ sermon.audio_file.url }}">
+          Your browser does not support the audio player.
+        </audio>
+      </div>
+      {% endif %}
+
+      <!-- No media message -->
+      {% if not sermon.youtube_url and not sermon.facebook_url and not sermon.audio_file %}
+      <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle"></i> No video or audio links attached to this sermon yet. Check back soon.
+      </div>
+      {% endif %}
+
+      <!-- Summary -->
+      <hr>
+      <h5><i class="bi bi-journal-text"></i> Sermon Summary</h5>
+      <p>{{ sermon.summary }}</p>
+
+      <!-- Notes PDF -->
+      {% if sermon.notes_pdf %}
+      <a href="{{ sermon.notes_pdf.url }}" target="_blank" class="btn btn-outline-primary">
+        <i class="bi bi-file-pdf"></i> Download Sermon Notes (PDF)
+      </a>
+      {% endif %}
+
+      <!-- Share links -->
+      <hr>
+      <h6 class="text-muted">Share this sermon</h6>
+      <div class="d-flex gap-2 flex-wrap">
+        {% if sermon.youtube_url %}
+        <a href="https://wa.me/?text=Watch this sermon: {{ sermon.title }} {{ sermon.youtube_url }}"
+           target="_blank" class="btn btn-sm btn-success">
+          <i class="bi bi-whatsapp"></i> Share on WhatsApp
+        </a>
+        {% elif sermon.facebook_url %}
+        <a href="https://wa.me/?text=Watch this sermon: {{ sermon.title }} {{ sermon.facebook_url }}"
+           target="_blank" class="btn btn-sm btn-success">
+          <i class="bi bi-whatsapp"></i> Share on WhatsApp
+        </a>
+        {% endif %}
+        {% if sermon.youtube_url %}
+        <a href="{{ sermon.youtube_url }}" target="_blank" class="btn btn-sm btn-danger">
+          <i class="bi bi-youtube"></i> Open YouTube
+        </a>
+        {% endif %}
+        {% if sermon.facebook_url %}
+        <a href="{{ sermon.facebook_url }}" target="_blank" class="btn btn-sm" style="background:#1877f2;color:white;">
+          <i class="bi bi-facebook"></i> Open Facebook
+        </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

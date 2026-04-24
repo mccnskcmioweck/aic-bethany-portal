@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Edit Member – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'member_detail' member_profile.pk %}" class="btn btn-outline-secondary btn-sm mb-3">← Back to Member</a>
+  <div class="card"><div class="card-header py-3">
+    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Member – {{ member_profile.user.get_full_name|default:member_profile.user.username }}</h4>
+    <small class="text-white-50">Admin can update all details including position and status</small>
+  </div>
+  <div class="card-body p-4">
+    <form method="post">{% csrf_token %}
+      <h5 class="text-primary mb-3"><i class="bi bi-person"></i> Personal Information</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><label class="form-label fw-semibold">First Name</label><input type="text" name="first_name" class="form-control" value="{{ member_profile.user.first_name }}"></div>
+        <div class="col-md-6"><label class="form-label fw-semibold">Last Name</label><input type="text" name="last_name" class="form-control" value="{{ member_profile.user.last_name }}"></div>
+        <div class="col-md-6"><label class="form-label fw-semibold">Email</label><input type="email" name="email" class="form-control" value="{{ member_profile.user.email }}"></div>
+        <div class="col-md-6"><label class="form-label fw-semibold">Phone</label><input type="text" name="phone" class="form-control" value="{{ member_profile.phone }}"></div>
+        <div class="col-md-4"><label class="form-label fw-semibold">Gender</label>
+          <select name="gender" class="form-select"><option value="">— Not specified —</option><option value="M" {% if member_profile.gender == 'M' %}selected{% endif %}>Male</option><option value="F" {% if member_profile.gender == 'F' %}selected{% endif %}>Female</option></select>
+        </div>
+        <div class="col-md-4"><label class="form-label fw-semibold">Date of Birth</label><input type="date" name="date_of_birth" class="form-control" value="{{ member_profile.date_of_birth|date:'Y-m-d'|default:'' }}"></div>
+        <div class="col-md-4"><label class="form-label fw-semibold">Baptism Date</label><input type="date" name="baptism_date" class="form-control" value="{{ member_profile.baptism_date|date:'Y-m-d'|default:'' }}"></div>
+        <div class="col-12"><label class="form-label fw-semibold">Address</label><textarea name="address" class="form-control" rows="2">{{ member_profile.address }}</textarea></div>
+      </div>
+      <hr>
+      <h5 class="text-primary mb-3"><i class="bi bi-shield-check"></i> Church Position & Status</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6"><label class="form-label fw-semibold">Church Position <span class="text-muted fw-normal small">(assigned by admin)</span></label>
+          <select name="position" class="form-select">
+            <option value="">— Regular Member —</option>
+            {% for pos in positions %}<option value="{{ pos.pk }}" {% if member_profile.position.pk == pos.pk %}selected{% endif %}>{{ pos.name }} ({{ pos.get_category_display }})</option>{% endfor %}
+          </select>
+          <div class="form-text">Assign a church leadership position to this member.</div>
+        </div>
+        <div class="col-md-3"><label class="form-label fw-semibold">Account Status</label>
+          <select name="status" class="form-select">
+            <option value="pending" {% if member_profile.status == 'pending' %}selected{% endif %}>⏳ Pending Approval</option>
+            <option value="active" {% if member_profile.status == 'active' %}selected{% endif %}>✅ Active</option>
+            <option value="inactive" {% if member_profile.status == 'inactive' %}selected{% endif %}>💤 Inactive</option>
+            <option value="suspended" {% if member_profile.status == 'suspended' %}selected{% endif %}>🚫 Suspended</option>
+          </select>
+        </div>
+        <div class="col-md-3"><label class="form-label fw-semibold">Date Joined Church</label><input type="date" name="date_joined_church" class="form-control" value="{{ member_profile.date_joined_church|date:'Y-m-d'|default:'' }}"></div>
+        <div class="col-12"><label class="form-label fw-semibold">Admin Notes <span class="text-muted fw-normal small">(private – member cannot see this)</span></label>
+          <textarea name="admin_notes" class="form-control" rows="3">{{ member_profile.admin_notes }}</textarea>
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-church px-5"><i class="bi bi-save"></i> Save Changes</button>
+        <a href="{% url 'member_detail' member_profile.pk %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div></div>
+</div>
+{% endblock %}

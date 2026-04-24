@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'report_dashboard' %}" class="btn btn-outline-secondary btn-sm mb-3">← Reports</a>
+  <div class="card"><div class="card-header py-3"><h4 class="mb-0"><i class="bi {{ icon }}"></i> {{ title }}</h4>{% if subtitle %}<small class="text-white-50">{{ subtitle }}</small>{% endif %}</div>
+  <div class="card-body p-4"><form method="post">{% csrf_token %}
+    <div class="row g-3">{% for field in form %}
+      <div class="col-md-{% if field.field.widget.attrs.rows %}12{% else %}6{% endif %}">
+        <label class="form-label fw-semibold">{{ field.label }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}</label>
+        {% if field.field.widget.input_type == 'select' %}
+          <select name="{{ field.html_name }}" class="form-select">{% for val, label in field.field.choices %}<option value="{{ val }}" {% if field.value|stringformat:'s' == val|stringformat:'s' %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+        {% elif field.field.widget.attrs.rows %}
+          <textarea name="{{ field.html_name }}" class="form-control" rows="{{ field.field.widget.attrs.rows }}">{{ field.value|default:'' }}</textarea>
+        {% else %}
+          <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}" class="form-control" {% if field.value %}value="{{ field.value }}"{% endif %} {% if field.field.widget.attrs.type %}type="{{ field.field.widget.attrs.type }}"{% endif %}>
+        {% endif %}
+        {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+        {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+    {% endfor %}</div>
+    <hr><button type="submit" class="btn btn-church px-5"><i class="bi bi-save"></i> Save Report</button>
+    <a href="{% url 'report_dashboard' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+  </form></div></div>
+</div>
+{% endblock %}

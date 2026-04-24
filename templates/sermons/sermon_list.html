@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Sermons – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-1"><i class="bi bi-mic"></i> Sermon Archive</h2>
+  <p class="text-muted mb-4">Watch, listen and read past sermons from AIC Bethany – Kabarnet</p>
+
+  <div class="row g-4">
+    {% for sermon in sermons %}
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          {% if sermon.series %}
+          <span class="badge mb-2" style="background:var(--church-primary)">{{ sermon.series }}</span>
+          {% endif %}
+          <h5 class="card-title">{{ sermon.title }}</h5>
+          <p class="text-muted mb-1"><i class="bi bi-book"></i> {{ sermon.scripture_reference }}</p>
+          <p class="text-muted mb-1"><i class="bi bi-person"></i> {{ sermon.get_preacher_name }}</p>
+          <p class="text-muted mb-3"><i class="bi bi-calendar3"></i> {{ sermon.sermon_date|date:"d F Y" }}</p>
+          <p class="small text-muted">{{ sermon.summary|truncatechars:100 }}</p>
+
+          <!-- Media badges -->
+          <div class="mb-2">
+            {% if sermon.youtube_url %}
+            <span class="badge bg-danger me-1"><i class="bi bi-youtube"></i> YouTube</span>
+            {% endif %}
+            {% if sermon.facebook_url %}
+            <span class="badge me-1" style="background:#1877f2"><i class="bi bi-facebook"></i> Facebook</span>
+            {% endif %}
+            {% if sermon.audio_file %}
+            <span class="badge bg-success me-1"><i class="bi bi-headphones"></i> Audio</span>
+            {% endif %}
+            {% if sermon.notes_pdf %}
+            <span class="badge bg-secondary"><i class="bi bi-file-pdf"></i> Notes</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <a href="{% url 'sermon_detail' sermon.pk %}" class="btn btn-church btn-sm w-100">
+            <i class="bi bi-play-circle"></i> Watch / Listen / Read
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <i class="bi bi-mic-mute fs-1 text-muted"></i>
+      <h5 class="text-muted mt-3">No sermons uploaded yet.</h5>
+      <p class="text-muted">Check back soon. 🙏</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Offering – {{ record.date }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{% url 'offering_list' %}" class="btn btn-outline-secondary btn-sm mb-3">← Back</a>
+  <div class="card"><div class="card-body p-4">
+    <div class="text-center border-bottom pb-3 mb-4"><h3 style="color:var(--church-primary)">AFRICAN INLAND CHURCH – BETHANY</h3><h5>OFFERING & TITHES REPORT</h5><p class="mb-0 text-muted">{{ record.get_service_type_display }} &nbsp;|&nbsp; {{ record.date|date:"l, d F Y" }}</p></div>
+    <div class="row">
+      <div class="col-md-6">
+        <h5 class="mb-3">Offerings</h5>
+        <table class="table table-bordered">
+          <tr><td>General Offering</td><td class="text-end fw-bold">{{ record.currency }} {{ record.general_offering|floatformat:2 }}</td></tr>
+          <tr><td>Thanksgiving Offering</td><td class="text-end fw-bold">{{ record.currency }} {{ record.thanksgiving_offering|floatformat:2 }}</td></tr>
+          <tr><td>Building Fund</td><td class="text-end fw-bold">{{ record.currency }} {{ record.building_fund|floatformat:2 }}</td></tr>
+          <tr><td>Missions Offering</td><td class="text-end fw-bold">{{ record.currency }} {{ record.missions_offering|floatformat:2 }}</td></tr>
+          <tr><td>Sunday School Offering</td><td class="text-end fw-bold">{{ record.currency }} {{ record.sunday_school_offering|floatformat:2 }}</td></tr>
+          {% if record.special_offering %}<tr><td>Special Offering {% if record.special_offering_purpose %}({{ record.special_offering_purpose }}){% endif %}</td><td class="text-end fw-bold">{{ record.currency }} {{ record.special_offering|floatformat:2 }}</td></tr>{% endif %}
+          <tr class="table-primary"><td><strong>Total Offerings</strong></td><td class="text-end fw-bold">{{ record.currency }} {{ record.total_offering|floatformat:2 }}</td></tr>
+        </table>
+      </div>
+      <div class="col-md-6 ps-md-4">
+        <h5 class="mb-3">Tithes</h5>
+        <table class="table table-bordered">
+          <tr><td>Tithes – Cash</td><td class="text-end fw-bold">{{ record.currency }} {{ record.tithes_cash|floatformat:2 }}</td></tr>
+          <tr><td>Tithes – M-PESA</td><td class="text-end fw-bold">{{ record.currency }} {{ record.tithes_mpesa|floatformat:2 }}</td></tr>
+          <tr class="table-primary"><td><strong>Total Tithes</strong></td><td class="text-end fw-bold">{{ record.currency }} {{ record.total_tithes|floatformat:2 }}</td></tr>
+        </table>
+        <div class="alert alert-success text-center mt-3"><div class="small text-muted">GRAND TOTAL</div><div class="fs-3 fw-bold">{{ record.currency }} {{ record.grand_total|floatformat:2 }}</div></div>
+      </div>
+    </div>
+    <div class="row g-3 mt-2">
+      {% if record.counted_by %}<div class="col-md-6"><strong>Counted By:</strong> {{ record.counted_by }}</div>{% endif %}
+      {% if record.verified_by %}<div class="col-md-6"><strong>Verified By:</strong> {{ record.verified_by.get_full_name }}</div>{% endif %}
+    </div>
+    <div class="mt-4 border-top pt-3 text-muted small"><div class="row"><div class="col-md-4">Counter 1 Signature: _______________</div><div class="col-md-4">Counter 2 Signature: _______________</div><div class="col-md-4">Treasurer Signature: _______________</div></div></div>
+  </div></div>
+  <button onclick="window.print()" class="btn btn-church mt-3"><i class="bi bi-printer"></i> Print</button>
+</div>{% endblock %}

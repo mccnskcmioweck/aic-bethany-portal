@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}{{ member_profile.user.get_full_name }} – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex gap-2 mb-3">
+    <a href="{% url 'member_list' %}" class="btn btn-outline-secondary btn-sm">← Members</a>
+    <a href="{% url 'member_edit' member_profile.pk %}" class="btn btn-church btn-sm"><i class="bi bi-pencil"></i> Edit</a>
+    {% if member_profile.status == 'pending' %}
+    <a href="{% url 'approve_member' member_profile.pk %}" onclick="return confirm('Approve?')" class="btn btn-success btn-sm">✅ Approve</a>
+    <a href="{% url 'reject_member' member_profile.pk %}" onclick="return confirm('Reject?')" class="btn btn-danger btn-sm">✗ Reject</a>
+    {% endif %}
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4"><div class="card text-center p-4">
+      {% if member_profile.photo %}<img src="{{ member_profile.photo.url }}" class="rounded-circle mx-auto mb-3" style="width:110px;height:110px;object-fit:cover;">
+      {% else %}<div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:110px;height:110px;background:var(--church-primary);color:white;font-size:2.5rem;font-weight:bold;">{{ member_profile.user.first_name|first }}{{ member_profile.user.last_name|first }}</div>{% endif %}
+      <h5 class="mb-1">{{ member_profile.user.get_full_name|default:member_profile.user.username }}</h5>
+      <p class="text-muted small mb-2">{{ member_profile.user.email }}</p>
+      {% if member_profile.position %}<span class="badge mb-1" style="background:var(--church-primary);font-size:13px">{{ member_profile.position.name }}</span><br>{% endif %}
+      <span class="badge {% if member_profile.status == 'active' %}bg-success{% elif member_profile.status == 'pending' %}bg-warning text-dark{% elif member_profile.status == 'suspended' %}bg-danger{% else %}bg-secondary{% endif %}">{{ member_profile.get_status_display }}</span>
+      {% if member_profile.status == 'active' %}<div class="mt-3 p-2 bg-success bg-opacity-10 rounded small"><strong>✅ Approved by:</strong> {{ member_profile.approved_by.get_full_name|default:"Admin" }}<br>{{ member_profile.approved_at|date:"d M Y"|default:"" }}</div>{% endif %}
+    </div></div>
+    <div class="col-md-8">
+      <div class="card mb-3"><div class="card-header"><i class="bi bi-person"></i> Personal Details</div>
+        <div class="card-body"><div class="row g-2">
+          <div class="col-sm-6"><small class="text-muted">Phone</small><br>{{ member_profile.phone|default:"—" }}</div>
+          <div class="col-sm-6"><small class="text-muted">Gender</small><br>{{ member_profile.get_gender_display|default:"—" }}</div>
+          <div class="col-sm-6"><small class="text-muted">Date of Birth</small><br>{{ member_profile.date_of_birth|default:"—" }}</div>
+          <div class="col-sm-6"><small class="text-muted">Baptism Date</small><br>{{ member_profile.baptism_date|default:"—" }}</div>
+          <div class="col-sm-6"><small class="text-muted">Date Joined Church</small><br>{{ member_profile.date_joined_church|default:"—" }}</div>
+          <div class="col-12"><small class="text-muted">Address</small><br>{{ member_profile.address|default:"—" }}</div>
+          {% if member_profile.bio %}<div class="col-12"><small class="text-muted">Bio</small><br>{{ member_profile.bio }}</div>{% endif %}
+        </div></div>
+      </div>
+      {% if member_profile.admin_notes %}<div class="card mb-3"><div class="card-header"><i class="bi bi-sticky"></i> Admin Notes</div><div class="card-body">{{ member_profile.admin_notes }}</div></div>{% endif %}
+      <div class="card"><div class="card-header d-flex justify-content-between"><span><i class="bi bi-list-check"></i> Service Requests</span><span class="badge bg-secondary">{{ requests_list.count }}</span></div>
+        {% if requests_list %}<div class="table-responsive"><table class="table table-sm mb-0"><thead class="table-light"><tr><th>Type</th><th>Subject</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>{% for r in requests_list %}<tr><td><small>{{ r.get_request_type_display }}</small></td><td><small>{{ r.subject|truncatechars:40 }}</small></td>
+            <td><span class="badge {% if r.status == 'completed' %}bg-success{% elif r.status == 'pending' %}bg-warning text-dark{% elif r.status == 'assigned' %}bg-info{% else %}bg-secondary{% endif %} small">{{ r.get_status_display }}</span></td>
+            <td><small>{{ r.created_at|date:"d M Y" }}</small></td></tr>{% endfor %}</tbody>
+          </table></div>
+        {% else %}<div class="card-body text-muted small">No requests yet.</div>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

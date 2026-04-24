@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Reports – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4"><div><h2 class="mb-0"><i class="bi bi-people"></i> Attendance Reports</h2><a href="{% url 'report_dashboard' %}" class="small text-muted">← Dashboard</a></div><a href="{% url 'attendance_create' %}" class="btn btn-church"><i class="bi bi-plus"></i> New Report</a></div>
+  <div class="card"><div class="table-responsive"><table class="table table-hover mb-0">
+    <thead class="table-dark"><tr><th>Date</th><th>Service</th><th>Total</th><th>Men</th><th>Women</th><th>Youth</th><th>Children</th><th>Visitors</th><th>Converts</th><th></th></tr></thead>
+    <tbody>{% for r in records %}<tr>
+      <td>{{ r.date|date:"d M Y" }}</td><td>{{ r.get_service_type_display }}</td>
+      <td><strong class="text-primary">{{ r.total_attendance }}</strong></td>
+      <td>{{ r.men }}</td><td>{{ r.women }}</td><td>{{ r.youth }}</td><td>{{ r.children }}</td><td>{{ r.visitors }}</td>
+      <td>{% if r.new_converts %}<span class="badge bg-success">{{ r.new_converts }}</span>{% else %}–{% endif %}</td>
+      <td><a href="{% url 'attendance_detail' r.pk %}" class="btn btn-sm btn-outline-primary">View</a></td>
+    </tr>{% empty %}<tr><td colspan="10" class="text-center text-muted py-4">No records yet. <a href="{% url 'attendance_create' %}">Record the first one.</a></td></tr>{% endfor %}</tbody>
+  </table></div></div>
+</div>{% endblock %}

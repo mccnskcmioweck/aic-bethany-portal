@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Service Request – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4"><div class="row justify-content-center"><div class="col-md-7">
+  <div class="card"><div class="card-header py-3"><h4 class="mb-0"><i class="bi bi-hand-index"></i> Submit a Service Request</h4></div>
+  <div class="card-body p-4">
+    <p class="text-muted mb-4">Need prayer, counseling, a home visit, or other pastoral care? Submit your request here.</p>
+    <form method="post">{% csrf_token %}
+      {% for field in form %}
+      <div class="mb-3"><label class="form-label fw-semibold">{{ field.label }}</label>{{ field }}
+        {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-church w-100 py-2"><i class="bi bi-send"></i> Submit Request</button>
+    </form>
+  </div></div>
+</div></div></div>
+{% endblock %}

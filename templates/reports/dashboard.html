@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Reports – AIC Bethany{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-1"><i class="bi bi-bar-chart-fill"></i> Reports & Statistics</h2>
+  <p class="text-muted mb-4">View and record all church reports.</p>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="card text-center p-3"><div class="fs-1 fw-bold text-primary">{{ total_this_month }}</div><small class="text-muted">Attendance This Month</small></div></div>
+    <div class="col-6 col-md-3"><div class="card text-center p-3"><div class="fs-2 fw-bold text-success">KES {{ total_offering_month|floatformat:0 }}</div><small class="text-muted">Offerings This Month</small></div></div>
+    <div class="col-6 col-md-3"><div class="card text-center p-3"><div class="fs-1 fw-bold text-warning">{{ attendance_records }}</div><small class="text-muted">Service Reports</small></div></div>
+    <div class="col-6 col-md-3"><div class="card text-center p-3"><div class="fs-1 fw-bold text-info">{{ recent_programs|length }}</div><small class="text-muted">Program Reports</small></div></div>
+  </div>
+  <div class="row g-4 mb-4">
+    <div class="col-md-6 col-lg-3"><div class="card h-100 text-center p-4"><i class="bi bi-people fs-1 text-primary mb-2"></i><h5>Attendance</h5><p class="small text-muted">Daily & Sunday service attendance</p><div class="mt-auto d-grid gap-2"><a href="{% url 'attendance_create' %}" class="btn btn-church btn-sm">+ New Report</a><a href="{% url 'attendance_list' %}" class="btn btn-outline-secondary btn-sm">View All</a></div></div></div>
+    <div class="col-md-6 col-lg-3"><div class="card h-100 text-center p-4"><i class="bi bi-book fs-1 text-primary mb-2"></i><h5>Sunday School</h5><p class="small text-muted">Class attendance & lesson topics</p><div class="mt-auto d-grid gap-2"><a href="{% url 'sunday_school_create' %}" class="btn btn-church btn-sm">+ New Report</a><a href="{% url 'sunday_school_list' %}" class="btn btn-outline-secondary btn-sm">View All</a></div></div></div>
+    <div class="col-md-6 col-lg-3"><div class="card h-100 text-center p-4"><i class="bi bi-cash-stack fs-1 text-success mb-2"></i><h5>Offerings & Tithes</h5><p class="small text-muted">All financial collections</p><div class="mt-auto d-grid gap-2"><a href="{% url 'offering_create' %}" class="btn btn-church btn-sm">+ New Report</a><a href="{% url 'offering_list' %}" class="btn btn-outline-secondary btn-sm">View All</a></div></div></div>
+    <div class="col-md-6 col-lg-3"><div class="card h-100 text-center p-4"><i class="bi bi-music-note-beamed fs-1 text-warning mb-2"></i><h5>Spiritual Programs</h5><p class="small text-muted">Choir, praise & worship, ministries</p><div class="mt-auto d-grid gap-2"><a href="{% url 'program_create' %}" class="btn btn-church btn-sm">+ New Report</a><a href="{% url 'program_list' %}" class="btn btn-outline-secondary btn-sm">View All</a></div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-6"><div class="card"><div class="card-header d-flex justify-content-between"><span><i class="bi bi-people"></i> Recent Attendance</span><a href="{% url 'attendance_list' %}" class="btn btn-sm btn-outline-light">View All</a></div>
+      <ul class="list-group list-group-flush">{% for r in recent_attendance %}<li class="list-group-item d-flex justify-content-between"><div><strong>{{ r.get_service_type_display }}</strong><br><small class="text-muted">{{ r.date|date:"d M Y" }}</small></div><span class="badge bg-primary fs-6">{{ r.total_attendance }}</span></li>{% empty %}<li class="list-group-item text-muted small">No records yet.</li>{% endfor %}</ul>
+    </div></div>
+    <div class="col-md-6"><div class="card"><div class="card-header d-flex justify-content-between"><span><i class="bi bi-cash-stack"></i> Recent Offerings</span><a href="{% url 'offering_list' %}" class="btn btn-sm btn-outline-light">View All</a></div>
+      <ul class="list-group list-group-flush">{% for r in recent_offerings %}<li class="list-group-item d-flex justify-content-between"><div><strong>{{ r.get_service_type_display }}</strong><br><small class="text-muted">{{ r.date|date:"d M Y" }}</small></div><span class="badge bg-success">KES {{ r.grand_total|floatformat:0 }}</span></li>{% empty %}<li class="list-group-item text-muted small">No records yet.</li>{% endfor %}</ul>
+    </div></div>
+  </div>
+</div>
+{% endblock %}
